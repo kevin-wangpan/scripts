@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Config>
+	<!-- 如果需要对单个仓执行git push到gerrit时，把这个git仓放到和auto_new_old_tool同级目录，并把git仓的目录名配置在这-->
+	<!-- 如果在repo工程下执行repo upload，则此配置项不起作用-->
+	<git_dir_path>git1</git_dir_path>
+	<!-- 如果需要在old与new目录下一级增加固定的中间目录，则可以配置此项-->
+	<!-- 比如配置为apps/HwCamera，则生成的目录结构为old/apps/HwCamera/src/***-->
+	<!-- 可以根据各组的业务要求进行配置。不需要时配置为空即可-->
+	<middle_dir>apps/HwCamera</middle_dir>
+	
+	<dts_info>
+		<!-- commit时-m指定的提交信息,如果有空格请两边加&quot;-->
+		<DTS>DTS2012040504638</DTS>
+		<Description>Add color temperature setting in display settings.</Description>
+		<APPx>OS Kernel</APPx>
+		<FeatureorBugfix>Feature</FeatureorBugfix>
+	</dts_info>
+	
+	<!-- 问题单提交者汉语拼音-->
+	<name>wangpeng</name>
+	
+	<!--以下为可选项，如果用户配置的话，工具会自动把结果拷贝到-->
+	<!--统一的待入库路径，并邮件通知审核者路径地址，方便其审核-->
+	<copy_target>
+		<flag>yes</flag>
+		<!-- 待入库路径。如果不配置则只在工具本地生成，否则再拷贝一份到配置的待入库里面-->
+		<domain_user>w00194035</domain_user>
+		<domain_password>******</domain_password>
+		<!--请确保这级目录给配置的域账号开通共享，而不是其父目录-->
+		<server_path>\\10.107.125.45\workspace</server_path>
+		<!-- 审核问题单人员的email地址,以英文逗号分开 -->
+		<!-- 工具会把生成在待入库中的问题单文件夹路径发送给接收者 -->
+		<email_receiver>w00194035@notesmail.huawei.com</email_receiver>
+	</copy_target>
+</Config>
