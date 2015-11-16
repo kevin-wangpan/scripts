@@ -1,0 +1,21 @@
+AndroidHome="/Users/wangpan/Android/tools/adt-bundle-mac-x86_64-20140321/sdk"
+ANDROID_HOME="/Users/wangpan/Android/tools/adt-bundle-mac-x86_64-20140321/sdk"
+export PATH=${PATH}:${AndroidHome}/platform-tools:${AndroidHome}/tools:${AndroidHome}/tools/proguard/bin/:${AndroidHome}/build-tools/android-4.3/:${AndroidHome}/build-tools/apache-ant-1.9.3/bin:~/bin/:~/apps/gradle-2.4/bin/:~/apps/mongo/
+source ~/.git-completion.bash
+
+#alias
+alias ls='ls -G'
+alias ll='ls -alG'
+
+#android
+alias adbout='adb uninstall com.xunlei.kankan.tv'
+alias adbiqyi='adb connect 192.168.4.167'
+alias adbletv='adb connect 192.168.4.147'
+alias adbdis='adb disconnect'
+alias adbins='adb install ~/xunlei/sources/tv/TvKankan/bin/TvKankan.apk'
+alias adbstart='adb shell am start com.xunlei.kankan.tv/com.kankan.tv.StartupActivity'
+alias adbinput='adb shell input text'
+alias logcat='adb logcat -v time yingyin:V *:S'
+
+#代码统计
+alias lineCount='test(){ find ./ -name "$1" |xargs grep -v "^$"|wc -l;};test'
