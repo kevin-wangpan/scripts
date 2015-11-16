@@ -1,0 +1,28 @@
+#!/bin/sh
+
+function printAuthorLine()
+{
+	if [ $(uname) == Darwin ];then
+		git log --author=$1 --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2  } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -
+	else
+		git log --author=$1 --pretty=tformat: --numstat | gawk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s removed lines: %s total lines: %s\n", add, subs, loc }' -
+	fi
+}
+export -f printAuthorLine
+if [ $# -lt 1 ]; then
+	git shortlog -sn | awk  '1==1 {
+	printf "╔════════════════════════════════════════════════════════════════════════\n"
+	printf "║ %s\n",$2; 
+	printf "╟────────────────────────────────────────────────────────────────────────\n"; 
+	printf "║   commit count: %s\n", $1; 
+	printf "╟────────────────────────────────────────────────────────────────────────\n"; 
+	printf "║   code changed:\n"; 
+	printf "║     "; 
+	system("printAuthorLine " $2);
+	printf "╚════════════════════════════════════════════════════════════════════════\n\n\n"}'
+
+	#echo "pls intput author name"
+	#exit 0
+else
+	printAuthorLine $1;
+fi
