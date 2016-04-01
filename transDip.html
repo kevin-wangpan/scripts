@@ -1,0 +1,39 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Dip转换</title>
+<script type="text/javascript" src="resources/scripts/jquery-1.3.2.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+  $("#btn").click(function(){
+
+  htmlobj=$.ajax({url:"transDip.php", data:{sourceDip:$("#sourceDip").val(), destDip:$("#destDip").val(), source:$("#source").val()}, async:false});
+
+  $("#dest").attr("value", htmlobj.responseText);
+  });
+
+});
+</script>
+</head>
+<body>
+<p>Dip转换</p>
+	<table border=1 bordercolor=#000000 borderlight=green style="border-collapse: collapse" cellpadding="0" cellspacing="0">
+		<tr>
+            <td>原尺寸</td>
+            <td>目标尺寸</td>
+        </tr>
+		<tr>
+			<td><input id="sourceDip" size="4"/>dip</td>
+			<td><input id="destDip" size="4"/>dip</td>
+		</tr>
+		<tr>
+			<td><textarea id="source" rows="40" cols="70"></textarea></td>
+			<td><textarea id="dest" rows="40" cols="70" readonly></textarea></td>
+		</tr>
+	</table>
+	<br/>
+	<input id="btn" type="button" value="转换" style="font-size:20px; width:50px; height:30px"/>
+</body>
+</html>
