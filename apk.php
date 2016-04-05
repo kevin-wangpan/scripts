@@ -98,12 +98,12 @@ $out = -1;
 if (!empty($param_project)) {
     $src = $src_mapping[$param_project];
 
-//    $semaphore = sem_get(890116);
-//    if (!$semaphore) {
-//        echo "获取同步锁失败";
-//        exit;
-//    }
-//    sem_acquire($semaphore);
+    $semaphore = sem_get(890116);
+    if (!$semaphore) {
+        echo "获取同步锁失败";
+        exit;
+    }
+    sem_acquire($semaphore);
 
     exec("sh /data/www/ci/apk.sh '$param_project' '$src' $sign '$channels' '$host' 2>&1", $out);
     #print_r("<br/>111<br/>");
@@ -111,7 +111,7 @@ if (!empty($param_project)) {
     #print_r("<br/>222<br/>");
     #print_r($status);
     #print_r("<br/>333<br/>");
-//    sem_release($semaphore);
+    sem_release($semaphore);
 }
 ?>
 

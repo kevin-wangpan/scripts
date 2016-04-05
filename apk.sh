@@ -37,7 +37,7 @@ cd $repo_dir
 current_dir="$PWD"
 echo "current_dir="$current_dir"<br/>  repo_dir="$repo_dir"<br/>"
 
-#whoami
+whoami
 echo "<br/>"
 
 if [ $current_dir = $repo_dir ]
@@ -53,6 +53,7 @@ then
 	fi
 else
 mkdir $repo_dir
+cd $repo_dir
 eval $git_clone_cmd
 cd $repo_root
 fi
