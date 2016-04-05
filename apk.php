@@ -173,9 +173,6 @@ if (!empty($param_project)) {
                     echo "<br/>";
                 }
             }
-//            $final_apk = findString($out, "[echo] FinalApk->");
-//            $final_apk = str_replace("[echo] FinalApk->/home/ftp", "ftp://192.168.0.150", $final_apk);
-//            echo "<a href=\"ftp://192.168.0.150/android/$param_project/$ftp_sub_dir\">$final_apk</a>";
         }
         echo "<br/>";
         foreach ($out as $line) {
