@@ -105,7 +105,17 @@ if (!empty($param_project)) {
     }
     sem_acquire($semaphore);
 
-    exec("sh /data/www/ci/apk.sh '$param_project' '$src' $sign '$channels' '$host' 2>&1", $out);
+    $finalHost="";
+    if($needSign) {
+        $finalHost = $src_mapping[server_host];
+    } else {
+        if($host) {
+            $finalHost = $host;
+        } else {
+            $finalHost = $src_mapping[server_host];
+        }
+    }
+    exec("sh /data/www/ci/apk.sh '$param_project' '$src' $sign '$channels' '$finalHost' 2>&1", $out);
     #print_r("<br/>111<br/>");
     #print_r($out);
     #print_r("<br/>222<br/>");
