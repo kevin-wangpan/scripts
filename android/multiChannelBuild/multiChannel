@@ -1,0 +1,80 @@
+#!/bin/bash
+CURRENT_PATH=`pwd`;
+CHANNEL_INFO_PARENT_DIRECTORY_NAME="META-INF"
+CHANNEL_APK_PARENT_DIRECTORY_NAME="out"
+CHANNELS_LIST_FILE_NAME="channels.config"
+CHANNEL_PREFIX_NAME="jdjk_"
+CURRNT_TIME=`date +%Y%m%d%H%M%S`
+
+
+echo "CURRENT_PATH = $CURRENT_PATH"
+echo "CHANNEL_INFO_PARENT_DIRECTORY_NAME = $CHANNEL_INFO_PARENT_DIRECTORY_NAME"
+echo "CHANNEL_APK_PARENT_DIRECTORY_NAME = $CHANNEL_APK_PARENT_DIRECTORY_NAME"
+echo "CHANNELS_LIST_FILE_NAME = $CHANNELS_LIST_FILE_NAME"
+echo "CHANNEL_PREFIX_NAME = $CHANNEL_PREFIX_NAME"
+echo "CURRNT_TIME = $CURRNT_TIME"
+
+
+currntPathBaseName=`basename $CURRENT_PATH`
+if [ $currntPathBaseName != multiChannels ]; then
+	echo "请在multiChannels目录下执行该脚本"
+	exit 1
+fi
+
+if [ ! -e ${CHANNELS_LIST_FILE_NAME} ]; then
+	echo "没有渠道列表文件"
+	exit 1
+fi
+
+if [ `ls -al *.apk | wc -l` -gt 1 ]; then
+	echo "当前目录下有多个apk文件";
+	exit 1
+elif [ `ls -al *.apk | wc -l` -lt 1 ]; then
+	echo "当前目录下没有apk文件";
+	exit 1
+else
+	echo ""
+fi
+
+originApkFileName=`ls *.apk`
+originApkFileBaseName=`basename $originApkFileName .apk`
+
+#开始签名、zipalign
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore sudaixiong.jks $originApkFileName sudaixiongkey -storepass sudaixiong
+zipalign -v -p 4 $originApkFileName "temp_"$originApkFileName
+rm $originApkFileName
+mv "temp_"$originApkFileName $originApkFileName
+
+echo "\n\n\n"
+echo "\n  #### 开始生成渠道包 ####"
+echo "原始apk文件名字："$originApkFileName
+
+#放置apk文件的目录
+mkdir -p $CHANNEL_APK_PARENT_DIRECTORY_NAME
+mkdir -p $CHANNEL_INFO_PARENT_DIRECTORY_NAME
+
+rm -rf ${CHANNEL_APK_PARENT_DIRECTORY_NAME}/*
+while IFS='' read -r line || [[ -n "$line" ]];
+do
+	channelCategory=`echo $line | cut -d ':' -f 1`
+	channelCategoryItems=`echo $line | cut -d ':' -f 2`
+	echo "    ++++++++ 渠道类别："$channelCategory
+	echo "    ++++++++ 渠道类别detail："$channelCategoryItems
+	if [ -n $channelCategory ]; then
+		mkdir -p ${CHANNEL_APK_PARENT_DIRECTORY_NAME}/${channelCategory}
+		OLD_IFS="$IFS";
+		IFS=",";
+		channelArray=($channelCategoryItems);
+		IFS="$OLD_IFS"
+		for channel in ${channelArray[@]}
+		do
+			echo "        开始生成渠道包：${channel}"
+			rm ${CHANNEL_INFO_PARENT_DIRECTORY_NAME}/*
+			touch ${CHANNEL_INFO_PARENT_DIRECTORY_NAME}/${CHANNEL_PREFIX_NAME}${channel}
+			newChannelApkFileName=${channel}_${originApkFileBaseName}_${CURRNT_TIME}.apk
+			cp $originApkFileName $newChannelApkFileName
+			zip -ur $newChannelApkFileName ${CHANNEL_INFO_PARENT_DIRECTORY_NAME}
+			mv $newChannelApkFileName ${CHANNEL_APK_PARENT_DIRECTORY_NAME}/${channelCategory}/$newChannelApkFileName
+		done
+	fi
+done < $CHANNELS_LIST_FILE_NAME
