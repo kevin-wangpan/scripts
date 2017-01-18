@@ -94,7 +94,9 @@ do
 		do
 			echo "        开始生成渠道包：${channel}"
 			rm ${CHANNEL_INFO_PARENT_DIRECTORY_NAME}/*
-			touch ${CHANNEL_INFO_PARENT_DIRECTORY_NAME}/${CHANNEL_PREFIX_NAME}${channel}
+			encryptedChannel=`md5 -q -s ${channel}napgnaw`
+			encryptedChannel=`echo ${encryptedChannel:0:5}`
+			touch ${CHANNEL_INFO_PARENT_DIRECTORY_NAME}/${CHANNEL_PREFIX_NAME}${encryptedChannel}_${channel}
 			newChannelApkFileName=${channel}_${originApkFileBaseName}_${SERVER_HOST}_${CURRNT_TIME}.apk
 			cp $originSignedApkFileName $newChannelApkFileName
 			zip -ur $newChannelApkFileName ${CHANNEL_INFO_PARENT_DIRECTORY_NAME}
